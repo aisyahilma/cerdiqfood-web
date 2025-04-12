@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "reactrouter",
-=======
   "name": "cerdiqfood-frontend",
->>>>>>> d7f10b989624e184d28e2e65efe101d11e7afb6d
   "private": true,
   "type": "module",
   "scripts": {
