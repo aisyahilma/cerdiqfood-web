@@ -1,5 +1,5 @@
-import { log } from "console";
 import type { Route } from "./+types/home";
+import type { Products } from "../modules/product/type";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -7,45 +7,37 @@ export function meta({}: Route.MetaArgs) {
     {
       name: "description",
       content:
-        "Web E-commerce web application for **CerDiQ Food**, a platform inspired by Sayurbox to sell fresh vegetables and homemade frozen food from our own garden and kitchen.",
+        "Buy fresh vegetables and homemade frozen food from our own garden and kitchen.",
     },
   ];
 }
 
-type Product = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string | null;
-  price: number;
-  srockQuantity?: number | null;
-  isOrganic?: boolean | null;
-  weight: number;
-  imageUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type Products = Product[];
-
-export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const response = await fetch(`http://localhost:3000/products`);
-  const products = (Products = await response.json());
+export async function loader({ params }: Route.LoaderArgs) {
+  const response = await fetch(`${process.env.BACKEND_API_URL}/products`);
+  const products: Products = await response.json();
   return products;
-}
-
-export function HydrateFallback() {
-  return <div>Loading products...</div>;
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const products = loaderData;
 
-  console.log({ products });
-
   return (
     <div>
       <h1>Cerdiq Food</h1>
+      <ul>
+        {products.map((product) => {
+          return (
+            <li key={product.id}>
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="size-40 object-cover"
+              />
+              <h2>{product.name}</h2>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
