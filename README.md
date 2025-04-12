@@ -1,4 +1,6 @@
-# CerdiqFood Web
+
+# Cerdiq Food - Frontend Web
+>>>>>>> d7f10b989624e184d28e2e65efe101d11e7afb6d
 
 E-commerce web application for **CerDiQ Food**, a platform inspired by Sayurbox to sell fresh vegetables and homemade frozen food from our own garden and kitchen.
 

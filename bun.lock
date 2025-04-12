@@ -1,8 +1,11 @@
 {
-  "lockfileVersion": 1,
+  "lockfileVersion": 0,
   "workspaces": {
     "": {
+<<<<<<< HEAD
       "name": "reactrouter",
+=======
+>>>>>>> d7f10b989624e184d28e2e65efe101d11e7afb6d
       "dependencies": {
         "@react-router/node": "^7.5.0",
         "@react-router/serve": "^7.5.0",
