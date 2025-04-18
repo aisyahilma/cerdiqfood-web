@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import type { Products } from "../modules/product/type";
+import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({}: Route.LoaderArgs) {
   const response = await fetch(`${process.env.BACKEND_API_URL}/products`);
   const products: Products = await response.json();
   return products;
@@ -28,12 +29,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         {products.map((product) => {
           return (
             <li key={product.id}>
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="size-40 object-cover"
-              />
-              <h2>{product.name}</h2>
+              <Link to={`/products/${product.slug}`}>
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="size-40 object-cover"
+                />
+                <h2>{product.name}</h2>
+              </Link>
             </li>
           );
         })}
