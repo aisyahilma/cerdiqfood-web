@@ -1,17 +1,16 @@
+import { Button } from "~/components/ui/button"; // Pastikan path sesuai dengan struktur proyekmu
 import type { Route } from "./+types/product-slug";
 import type { Product } from "~/modules/product/type";
-import { Button } from "~/components/ui/button";
 import { parseHtmlToReact } from "~/lib/html";
 import { convertCurrencyToIDR } from "~/lib/currency";
 
 export function meta({ params }: Route.MetaArgs) {
-  const productName = params.slug?.replace(/-/g, " ") || "CerDiQ Food Product";
   return [
-    { title: `Cerdiq Food – ${productName}` },
+    { title: `CerDiQ Food – ${params.slug?.replace(/-/g, " ")}` },
     {
       name: "description",
       content:
-        "Produk pilihan dari Cerdiq Food – segar, sehat, halal, dan praktis!",
+        "Produk pilihan dari CerDiQ Food – segar, sehat, halal, dan praktis!",
     },
   ];
 }
@@ -44,18 +43,35 @@ export default function ProductSlug({ loaderData }: Route.ComponentProps) {
           </h2>
 
           <p className="text-gray-600 mb-4 leading-relaxed">
-            {product.description
-              ? parseHtmlToReact(product.description)
-              : "Deskripsi produk tidak tersedia."}
+            {parseHtmlToReact(
+              product.description?.substring(0, 150).concat("...")
+            )}
           </p>
 
           <p className="text-xl font-bold text-green-600 mb-6">
             {convertCurrencyToIDR(product.price)}
           </p>
 
-          <button className="px-6 py-2 bg-[#E63946] text-white rounded-lg hover:bg-red-700 transition">
+          <p className="text-md font-semibold mb-2">
+            {product.stockQuantity
+              ? `Stock: ${product.stockQuantity}`
+              : "Stock: Out of stock"}
+          </p>
+
+          <p className="text-md font-semibold mb-2">
+            {product.isOrganic ? "Organic Product" : "Not Organic"}
+          </p>
+
+          {/* Tombol menggunakan ShadCN UI */}
+          <Button
+            color="danger"
+            onClick={() =>
+              (window.location.href = "https://wa.me/your-whatsapp-number")
+            } // Ganti dengan URL WhatsApp atau halaman pemesanan
+            className="w-full md:w-auto"
+          >
             Pesan Sekarang
-          </button>
+          </Button>
         </div>
       </div>
     </div>
