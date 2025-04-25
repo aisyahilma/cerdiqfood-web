@@ -4,7 +4,7 @@ export type Product = {
   slug: string;
   description?: string | null;
   price: number;
-  srockQuantity?: number | null;
+  stockQuantity?: number | null;
   isOrganic?: boolean | null;
   weight: number;
   imageUrl: string;

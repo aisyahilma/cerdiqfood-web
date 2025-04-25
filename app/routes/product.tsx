@@ -1,5 +1,6 @@
 import type { Product } from "../modules/product/type";
 import type { Route } from "./+types/product";
+import { convertCurrencyToIDR } from "~/lib/currency";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -34,7 +35,9 @@ export default function Product({ loaderData }: Route.ComponentProps) {
         className="size-40 object-cover"
       />
       <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
+      <p className="font-semibold text-green-600">
+        Harga: {convertCurrencyToIDR(product.price)}
+      </p>
       <p>Weight: {product.weight} kg</p>
       <p>Stock Quantity: {product.srockQuantity}</p>
       <p>Is Organic: {product.isOrganic ? "Yes" : "No"}</p>

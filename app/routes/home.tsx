@@ -58,12 +58,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                       {product.name}
                     </h2>
 
-                    {product.category && (
-                      <span className="text-xs inline-block bg-[#E63946] text-white px-2 py-1 rounded-full mb-2">
-                        {product.category}
-                      </span>
-                    )}
-
                     <p className="text-sm text-gray-600 mb-3">
                       {parseHtmlToReact(
                         product.description?.substring(0, 80).concat("...")
