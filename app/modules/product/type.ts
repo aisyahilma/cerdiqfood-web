@@ -8,7 +8,8 @@ export type Product = {
   isOrganic?: boolean | null;
   weight: number;
   imageUrl: string;
-  category?: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type Products = Product[];
