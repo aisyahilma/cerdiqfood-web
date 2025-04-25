@@ -15,6 +15,7 @@
     "@react-router/serve": "^7.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "html-react-parser": "^5.2.3",
     "isbot": "^5.1.17",
     "lucide-react": "^0.493.0",
     "react": "^19.0.0",
