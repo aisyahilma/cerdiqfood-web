@@ -1,9 +1,7 @@
 import type { Route } from "./+types/product-slug";
 import type { Product } from "~/modules/product/type";
 import { parseHtmlToReact } from "~/lib/html";
-import { convertCurrencyToIDR } from "~/lib/currency";
 import { Form, redirect } from "react-router";
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { destroySession, getSession } from "~/sessions.server";
 import type { AddCartItem } from "~/modules/cart/schema";
@@ -56,58 +54,92 @@ export async function action({ request }: Route.ActionArgs) {
     });
   }
 
-  return redirect("/cart");
+  // Check if the form submission came from the "Pesan Sekarang" button
+  const referer = request.headers.get("Referer");
+  const isCheckout = formData.get("action") === "checkout";
+
+  if (isCheckout) {
+    return redirect("/cart");
+  }
+  return redirect(`/products/${formData.get("productSlug")}`);
 }
 
 export default function ProductSlug({ loaderData }: Route.ComponentProps) {
   const product = loaderData;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row bg-white shadow-md rounded-xl overflow-hidden">
-        <div className="w-full md:w-1/2 aspect-square">
+    <div className="flex-grow container mx-auto m-4 p-4">
+      <div className="flex bg-card rounded-lg overflow-hidden gap-4">
+        <div className="aspect-square">
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-80 object-cover rounded-md"
+            className="w-full h-full object-cover"
           />
         </div>
-
-        <div className="w-full md:w-1/2 p-6">
-          <h2 className="text-2xl font-bold text-[#E63946] mb-3">
+        <div className="p-4">
+          <h1 className="text-xl font-semibold mb-2 dark:text-white">
             {product.name}
-          </h2>
-
-          <p className="text-gray-600 mb-4 leading-relaxed">
-            {parseHtmlToReact(
-              product.description?.substring(0, 150).concat("...")
-            )}
+          </h1>
+          <p className="prose text-gray-600 dark:text-gray-300 mb-4">
+            {parseHtmlToReact(product.description)}
           </p>
 
-          <p className="text-xl font-bold text-green-600 mb-6">
-            {convertCurrencyToIDR(product.price)}
+          <p className="text-lg font-black text-green-600 p-4">
+            {new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              minimumFractionDigits: 0,
+            }).format(product.price)}
           </p>
 
-          <p className="text-md font-semibold mb-2">
-            {product.stockQuantity
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            {product.stockQuantity && product.stockQuantity > 0
               ? `Stock: ${product.stockQuantity}`
               : "Stock: Out of stock"}
           </p>
 
-          <p className="text-md font-semibold mb-2">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
             {product.isOrganic ? "Organic Product" : "Not Organic"}
           </p>
 
-          {/* Tombol menggunakan ShadCN UI */}
-          <Button
-            color="danger"
-            onClick={() =>
-              (window.location.href = "https://wa.me/your-whatsapp-number")
-            } // Ganti dengan URL WhatsApp atau halaman pemesanan
-            className="w-full md:w-auto"
-          >
-            Pesan Sekarang
-          </Button>
+          <div className="flex flex-col gap-4">
+            <Form method="post" className="flex flex-col gap-4">
+              <input type="hidden" name="productId" value={product.id} />
+              <input type="hidden" name="productSlug" value={product.slug} />
+
+              <div className="flex items-center gap-4">
+                <label htmlFor="quantity" className="text-sm font-medium">
+                  Kuantitas:
+                </label>
+                <input
+                  id="quantity"
+                  type="number"
+                  name="quantity"
+                  defaultValue={1}
+                  min={1}
+                  max={product.stockQuantity ?? 1} // default 1 kalau stockQuantity null
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <Button
+                  type="submit"
+                  className="flex-1 h-11 bg-[#E63946] text-white hover:bg-[#F25A5A] transition duration-200"
+                >
+                  Tambah ke Keranjang
+                </Button>
+                <Button
+                  type="submit"
+                  name="action"
+                  value="checkout"
+                  className="flex-1 h-11 bg-green-600 text-white hover:bg-green-500 transition duration-200"
+                >
+                  Pesan Sekarang
+                </Button>
+              </div>
+            </Form>
+          </div>
         </div>
       </div>
     </div>
