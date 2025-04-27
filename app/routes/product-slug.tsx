@@ -47,6 +47,7 @@ export async function action({ request }: Route.ActionArgs) {
     },
     body: JSON.stringify(addCartItemData),
   });
+
   if (!response.ok) {
     session.flash("error", "Failed to add item to cart");
     return redirect("/login", {
@@ -54,14 +55,7 @@ export async function action({ request }: Route.ActionArgs) {
     });
   }
 
-  // Check if the form submission came from the "Pesan Sekarang" button
-  const referer = request.headers.get("Referer");
-  const isCheckout = formData.get("action") === "checkout";
-
-  if (isCheckout) {
-    return redirect("/cart");
-  }
-  return redirect(`/products/${formData.get("productSlug")}`);
+  return redirect("/cart");
 }
 
 export default function ProductSlug({ loaderData }: Route.ComponentProps) {
@@ -106,8 +100,6 @@ export default function ProductSlug({ loaderData }: Route.ComponentProps) {
           <div className="flex flex-col gap-4">
             <Form method="post" className="flex flex-col gap-4">
               <input type="hidden" name="productId" value={product.id} />
-              <input type="hidden" name="productSlug" value={product.slug} />
-
               <div className="flex items-center gap-4">
                 <label htmlFor="quantity" className="text-sm font-medium">
                   Kuantitas:
@@ -128,14 +120,6 @@ export default function ProductSlug({ loaderData }: Route.ComponentProps) {
                   className="flex-1 h-11 bg-[#E63946] text-white hover:bg-[#F25A5A] transition duration-200"
                 >
                   Tambah ke Keranjang
-                </Button>
-                <Button
-                  type="submit"
-                  name="action"
-                  value="checkout"
-                  className="flex-1 h-11 bg-green-600 text-white hover:bg-green-500 transition duration-200"
-                >
-                  Pesan Sekarang
                 </Button>
               </div>
             </Form>
